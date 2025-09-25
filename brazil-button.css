@@ -1,0 +1,23 @@
+body {
+    background-color: #0d0d1c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.tech-button {
+    /* Torna o botão invisível, só a imagem aparece */
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    line-height: 0; /* Evita espaçamento extra abaixo da imagem */
+}
+
+#flag-image {
+    width: 100%; /* Garante que a imagem preencha o botão */
+    height: auto;
+    display: block;
+}
