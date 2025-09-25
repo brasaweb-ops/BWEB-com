@@ -1,0 +1,238 @@
+/* Importar variáveis globais para consistência */
+/* Você pode querer criar um arquivo de variáveis globais ou copiar estas para o início */
+:root {
+    --theme-bg: #0d0d1c;
+    --theme-primary-color: #3742FA; /* Azul Científico */
+    --theme-secondary-color: #FF6B35; /* Laranja Brasileiro */
+    --theme-accent-color: #FF4757; /* Vermelho Digital */
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Share Tech Mono', monospace;
+}
+
+body {
+    background-color: var(--theme-bg);
+    font-family: var(--font-body);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Para garantir que o holograma seja o foco */
+}
+
+.hologram-section {
+    position: relative;
+    width: 90vw;
+    max-width: 900px;
+    height: 60vh;
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px; /* Para efeitos 3D */
+}
+
+.hologram-frame {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--theme-primary-color);
+    box-shadow: 0 0 20px var(--theme-primary-color), inset 0 0 10px var(--theme-primary-color);
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    box-sizing: border-box;
+    transform: rotateX(10deg); /* Inclinação para efeito de holograma */
+    transform-style: preserve-3d;
+}
+
+.hologram-frame::before,
+.hologram-frame::after {
+    content: '';
+    position: absolute;
+    background-color: var(--theme-primary-color);
+    filter: blur(5px);
+    opacity: 0.3;
+}
+
+.hologram-frame::before {
+    top: -10px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    box-shadow: 0 0 15px var(--theme-primary-color);
+}
+
+.hologram-frame::after {
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    box-shadow: 0 0 15px var(--theme-primary-color);
+}
+
+.hologram-screen {
+    position: relative;
+    width: 90%;
+    height: 80%;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--theme-secondary-color);
+    box-shadow: inset 0 0 15px var(--theme-secondary-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Para os efeitos de glitch */
+}
+
+.hologram-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0,0,0,0) 50%, rgba(255,255,255,0.1) 50%);
+    background-size: 100% 4px;
+    animation: scanlines 0.5s infinite linear, glitch 2s infinite step-end;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.hologram-scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.1) 0px,
+        rgba(0,0,0,0.1) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+}
+
+.hologram-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    color: #fff;
+    text-shadow: 0 0 8px var(--theme-primary-color);
+    padding: 1rem;
+}
+
+.hologram-content h2 {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+    color: var(--theme-primary-color);
+    text-shadow: 0 0 15px var(--theme-primary-color);
+}
+
+.hologram-content p {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #ccc;
+}
+
+/* Efeito Typewriter para texto */
+.typewriter-text {
+    overflow: hidden; /* Garante que o texto só é visível ao digitar */
+    white-space: nowrap; /* Não quebra a linha */
+    animation: typing 0.5s steps(30, end) forwards;
+    width: 0; /* Começa com largura zero */
+    border-right: .15em solid var(--theme-accent-color); /* Cursor piscando */
+    box-sizing: content-box; /* Para o cursor não mover o texto */
+}
+
+/* Animação para o efeito Typewriter */
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+/* Opcional: Animação do cursor de digitação */
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: var(--theme-accent-color) }
+}
+.typewriter-text.active {
+    animation: typing 3.5s steps(30, end), blink-caret .75s step-end infinite;
+}
+
+.hologram-controls {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 1.5rem;
+}
+
+.hologram-btn {
+    background: rgba(var(--theme-primary-color-rgb, 55, 66, 250), 0.2); /* Usa cor primária com opacidade */
+    border: 1px solid var(--theme-primary-color);
+    color: var(--theme-primary-color);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px var(--theme-primary-color), inset 0 0 5px var(--theme-primary-color);
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.hologram-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(var(--theme-primary-color-rgb, 55, 66, 250), 0.3), transparent);
+    transition: all 0.5s ease;
+}
+
+.hologram-btn:hover::before {
+    left: 100%;
+}
+
+.hologram-btn:hover {
+    background-color: rgba(var(--theme-primary-color-rgb, 55, 66, 250), 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px var(--theme-accent-color), inset 0 0 8px var(--theme-accent-color);
+    color: #fff;
+}
+
+.hologram-btn .arrow {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+/* Animações de glitch e scanlines */
+@keyframes glitch {
+    0% { transform: translate(0); opacity: 0.1; }
+    20% { transform: translate(-2px, 2px); opacity: 0.15; }
+    40% { transform: translate(2px, -2px); opacity: 0.1; }
+    60% { transform: translate(-1px, 1px); opacity: 0.12; }
+    80% { transform: translate(1px, -1px); opacity: 0.1; }
+    100% { transform: translate(0); opacity: 0.1; }
+}
+
+@keyframes scanlines {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100%; }
+}
+
+/* Ajuste para cores RGB nas variáveis CSS para transparência */
+/* Para facilitar, adicione estas no seu :root ou onde definir as variáveis */
+:root {
+    --theme-primary-color-rgb: 55, 66, 250; /* R, G, B para #3742FA */
+    --theme-secondary-color-rgb: 255, 107, 53; /* R, G, B para #FF6B35 */
+    --theme-accent-color-rgb: 255, 71, 87; /* R, G, B para #FF4757 */
+}

@@ -1,0 +1,173 @@
+/* Importar variáveis globais */
+:root {
+    --brasa-green: #00ff41;
+    --brasa-dark: #0d0d1c;
+    --font-terminal: 'Share Tech Mono', monospace;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--brasa-dark);
+    font-family: var(--font-terminal);
+    overflow: hidden;
+    cursor: none;
+}
+
+/* Fundo do Apartamento - Criado com CSS Puro e Camadas */
+.matrix-scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #0d0d1c;
+    filter: brightness(0.8) contrast(1.5);
+}
+
+.bg-element {
+    position: absolute;
+    background-color: rgba(13, 13, 28, 0.7);
+    border: 1px solid rgba(0,255,65,0.2);
+    box-shadow: 0 0 10px rgba(0,255,65,0.2), inset 0 0 5px rgba(0,255,65,0.1);
+    z-index: 1;
+}
+
+.bg-element.monitor {
+    width: 200px;
+    height: 150px;
+    top: 55%;
+    left: 15%;
+    transform: rotate(-15deg);
+}
+
+.bg-element.box {
+    width: 120px;
+    height: 80px;
+    top: 60%;
+    left: 28%;
+    transform: rotate(10deg);
+}
+
+.bg-element.diskette {
+    width: 70px;
+    height: 70px;
+    top: 68%;
+    left: 38%;
+    transform: rotate(45deg);
+}
+
+.bg-element.cd {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    top: 65%;
+    left: 42%;
+    animation: float 10s infinite ease-in-out;
+}
+
+.bg-element.line {
+    width: 300px;
+    height: 2px;
+    background-color: rgba(0,255,65,0.1);
+    box-shadow: 0 0 5px rgba(0,255,65,0.2);
+    top: 75%;
+    left: 10%;
+    transform: rotate(20deg);
+}
+
+/* Container do Terminal */
+.terminal-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 900px;
+    height: 70vh;
+    border: 2px solid var(--brasa-green);
+    box-shadow: 0 0 20px var(--brasa-green), 
+                0 0 40px var(--brasa-green) inset;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 10;
+}
+
+.terminal-screen {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    color: var(--brasa-green);
+    text-shadow: 0 0 8px var(--brasa-green);
+    line-height: 1.4;
+    white-space: pre-wrap;
+    animation: flicker 0.15s infinite alternate;
+}
+
+/* Efeito de Scanlines (opcional) */
+.terminal-screen::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.1) 0,
+        rgba(0, 0, 0, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.terminal-input-line {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+}
+
+.prompt {
+    color: var(--brasa-green);
+    margin-right: 10px;
+    font-size: 1.1em;
+}
+
+#terminal-input {
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    color: var(--brasa-green);
+    font-family: var(--font-terminal);
+    font-size: 1.1em;
+    outline: none;
+    caret-color: var(--brasa-green);
+}
+
+.ad-line {
+    font-size: 0.8em;
+    color: #fff;
+    opacity: 0.5;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+/* Animações */
+@keyframes flicker {
+    0% { opacity: 1; }
+    40% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+@keyframes float {
+    0% { transform: translateY(0) rotate(20deg); }
+    50% { transform: translateY(-5px) rotate(25deg); }
+    100% { transform: translateY(0) rotate(20deg); }
+}
