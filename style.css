@@ -1,0 +1,509 @@
+/* Variáveis para cores */
+:root {
+    --brasa-dark-bg: #10121a;
+    --brasa-core-blue: #00ffff;
+    --brasa-pink: #ff0077;
+    --brasa-purple: #8a2be2;
+    --brasa-yellow: #ffeb3b;
+    --brasa-light-bg: #181c2b;
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Share Tech Mono', monospace;
+}
+
+/* Base e tela */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--brasa-dark-bg);
+    color: #fff;
+    overflow: hidden; /* Evita scroll desnecessário */
+    cursor: crosshair;
+}
+
+/* Canvas de Fundo */
+#network-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.8;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 3rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--brasa-core-blue);
+    text-shadow: 0 0 15px var(--brasa-core-blue);
+    animation: glow-pulse 3s infinite alternate;
+}
+
+.header-controls {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.dropdown-label {
+    font-size: 0.9rem;
+    color: var(--brasa-core-blue);
+}
+
+.dropdown-select, .search-box {
+    background: transparent;
+    border: 1px solid var(--brasa-core-blue);
+    color: var(--brasa-core-blue);
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    font-family: var(--font-body);
+    outline: none;
+    text-shadow: 0 0 5px var(--brasa-core-blue);
+}
+.search-box::placeholder {
+    color: var(--brasa-core-blue);
+    opacity: 0.7;
+}
+
+.main-container {
+    position: relative; /* Isso cria um novo "contexto de empilhamento" */
+    z-index: 1; /* Garante que fique acima do background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* BrasaCore Singleton (Centro) */
+.brasa-core-singleton {
+    text-align: center;
+    position: relative;
+    z-index: 100;
+}
+
+.icosahedron {
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path fill="%2300ffff" d="M100 0L100 200M100 200L0 50L200 50ZM0 50L150 150L50 150L200 50Z" opacity="0.1" stroke="%2300ffff" stroke-width="1.5"/><path fill="%2300ffff" d="M100 0L150 150L50 150L100 0Z" opacity="0.2" stroke="%2300ffff" stroke-width="1.5"/></svg>') no-repeat center;
+    background-size: contain;
+    animation: pulse-glow 3s infinite alternate;
+}
+
+.brasa-core-singleton h1 {
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    color: #fff;
+    text-shadow: 0 0 20px var(--brasa-core-blue);
+}
+.brasa-core-singleton p {
+    font-size: 1.2rem;
+    color: var(--brasa-core-blue);
+    text-shadow: 0 0 10px var(--brasa-core-blue);
+}
+
+/* Seções da Rede */
+.network-sections {
+    width: 800px;
+    height: 800px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.section {
+    position: absolute;
+    transition: transform 0.5s ease-in-out;
+}
+
+/* Posicionamento das seções em círculo (usando coordenadas e rotação) */
+.section.labs { top: 0; left: 50%; transform: translate(-50%, -50%) rotate(-36deg) translate(0, 380px) rotate(36deg); }
+.section.bits { top: 25%; right: 0; transform: translate(50%, -50%) rotate(36deg) translate(0, 380px) rotate(-36deg); }
+.section.manifesto-top { top: 50%; right: 0; transform: translate(50%, 50%) rotate(108deg) translate(0, 380px) rotate(-108deg); }
+.section.guard { bottom: 0; right: 50%; transform: translate(50%, 50%) rotate(180deg) translate(0, 380px) rotate(-180deg); }
+.section.manifesto-bottom { top: 75%; left: 0; transform: translate(-50%, 50%) rotate(252deg) translate(0, 380px) rotate(-252deg); }
+/* Remova as regras antigas para .circle se elas conflituírem */
+/* Ajuste as propriedades de posicionamento das seções para os novos IDs */
+
+/* Estilos para os novos containers 3D */
+.node-3d-container {
+    width: 150px; /* Mesma largura/altura que o antigo círculo */
+    height: 150px;
+    position: relative;
+    border-radius: 50%; /* Mantém o formato circular do container principal do nodo */
+    background-color: var(--brasa-light-bg);
+    border: 1px solid var(--brasa-pink); /* Borda inicial */
+    box-shadow: 0 0 10px var(--brasa-pink), inset 0 0 5px var(--brasa-pink);
+    transition: all 0.3s ease-in-out;
+    display: flex; /* Para centralizar o canvas interno */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Garante que o 3D não "vaze" */
+}
+
+/* Hover effect para o container 3D */
+.node-3d-container:hover {
+    transform: scale(1.1);
+    border-color: var(--brasa-core-blue);
+    box-shadow: 0 0 20px var(--brasa-core-blue), inset 0 0 10px var(--brasa-core-blue);
+}
+
+.node-3d-container canvas {
+    /* O canvas gerado pelo Three.js */
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50%; /* O canvas também circular */
+    object-fit: contain; /* Para que a forma 3D se ajuste */
+}
+
+/* Ajuste das posições das novas seções (precisa de recalibração fina) */
+.section.brasabits { top: 0; left: 50%; transform: translate(-50%, -50%) rotate(-45deg) translate(0, 380px) rotate(45deg); }
+.section.brasalabs { top: 50%; right: 0; transform: translate(50%, -50%) rotate(45deg) translate(0, 380px) rotate(-45deg); } /* Ajuste de rotação para ficar mais distribuído */
+.section.brasabase { bottom: 0; left: 50%; transform: translate(-50%, 50%) rotate(135deg) translate(0, 380px) rotate(-135deg); }
+.section.brasakhaos { top: 50%; left: 0; transform: translate(-50%, -50%) rotate(-135deg) translate(0, 380px) rotate(135deg); }
+
+/* Ajuste do texto dentro da seção */
+.section h2, .section p, .content-text {
+    position: relative;
+    z-index: 2; /* Garante que o texto fique acima do 3D */
+    color: #fff; /* Cores padrão para o texto */
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.section p {
+    color: var(--brasa-pink); /* Cores de destaque para o subtítulo */
+    text-shadow: 0 0 3px var(--brasa-pink);
+}
+
+/* Hover nos textos também */
+.node-3d-container:hover + h2 { /* h2 irmão do container 3D */
+    color: var(--brasa-core-blue);
+    text-shadow: 0 0 10px var(--brasa-core-blue);
+}
+.node-3d-container:hover + h2 + p { /* p irmão do container 3D, após o h2 */
+    color: #fff;
+    text-shadow: 0 0 8px #fff;
+}
+.node-3d-container:hover + h2 + p + .content-text span {
+     color: var(--brasa-core-blue);
+}
+
+
+/* Remova as regras antigas para .circle h2, .circle p, etc. */
+/* Pode ser necessário ajustar o posicionamento do texto em relação ao canvas 3D com flexbox/grid */
+.section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    /* ... outras propriedades de posicionamento e transição ... */
+}
+
+/* Remover os glow-pulse do logo e transferir para o icosaedro central */
+.logo {
+    animation: none; /* Remove a animação do logo */
+    text-shadow: 0 0 5px #fff, 0 0 15px var(--brasa-core-blue); /* Mantém um glow estático */
+}
+.content-text {
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    color: #ccc;
+}
+
+/* Animações */
+@keyframes glow-pulse {
+    0% { text-shadow: 0 0 5px var(--brasa-core-blue), 0 0 10px var(--brasa-core-blue); }
+    100% { text-shadow: 0 0 15px var(--brasa-core-blue), 0 0 25px var(--brasa-core-blue); }
+}
+
+@keyframes pulse-glow {
+    0% { filter: drop-shadow(0 0 5px var(--brasa-core-blue)); }
+    100% { filter: drop-shadow(0 0 25px var(--brasa-core-blue)); }
+}
+
+/* Footer */
+.footer {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+.social-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+/* Responsividade básica (para telas menores) */
+@media (max-width: 1024px) {
+    .network-sections {
+        width: 600px;
+        height: 600px;
+    }
+    .circle {
+        width: 120px;
+        height: 120px;
+    }
+    .brasa-core-singleton {
+        transform: scale(0.8);
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+        text-align: center;
+    }
+    .header-controls {
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    .main-container {
+        flex-direction: column;
+    }
+    .network-sections {
+        position: relative;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .section {
+        position: static;
+        transform: none !important;
+        margin-bottom: 2rem;
+    }
+    .brasa-core-singleton {
+        margin-bottom: 2rem;
+    }
+}
+
+.brasa-core-singleton {
+    text-align: center;
+    position: relative;
+    z-index: 100;
+}
+
+.icosahedron {
+    width: 280px;
+    height: 280px;
+    margin: 0 auto;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.4) 0%, transparent 70%);
+    position: relative;
+    animation: core-pulsate 4s infinite cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.icosahedron::before,
+.icosahedron::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Gerando a forma do icosaedro via SVG */
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path d="M100 0L200 50L150 150L50 150L0 50L100 0Z" fill="transparent" stroke="%2300ffff" stroke-width="2"/><path d="M100 0L100 200M0 50L200 50" fill="transparent" stroke="%2300ffff" stroke-width="2"/><path d="M150 150L50 150" fill="transparent" stroke="%2300ffff" stroke-width="2"/><circle cx="100" cy="100" r="80" fill="transparent" stroke="%2300ffff" stroke-width="1"/></svg>') no-repeat center center;
+    background-size: contain;
+    transform: rotateY(0deg);
+    opacity: 0.9;
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+    transition: transform 1s ease-in-out;
+}
+
+.icosahedron::after {
+    transform: rotateX(60deg) rotateY(120deg);
+    animation: icosa-rotate-slow 30s infinite linear;
+}
+
+.icosahedron::before {
+    animation: icosa-rotate-fast 15s infinite linear reverse;
+}
+
+@keyframes icosa-rotate-fast {
+    from { transform: rotate3d(1, 1, 1, 0deg); }
+    to { transform: rotate3d(1, 1, 1, 360deg); }
+}
+
+@keyframes icosa-rotate-slow {
+    from { transform: rotate3d(1, 1, 0.5, 0deg); }
+    to { transform: rotate3d(1, 1, 0.5, 360deg); }
+}
+
+@keyframes core-pulsate {
+    0% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.05); filter: brightness(1.5); }
+    100% { transform: scale(1); filter: brightness(1); }
+}
+
+/* Adicione esta regra ao seu CSS existente */
+
+.circle:hover {
+    transform: scale(1.1);
+    border-color: var(--brasa-core-blue);
+    box-shadow: 0 0 20px var(--brasa-core-blue), inset 0 0 10px var(--brasa-core-blue);
+    transition: all 0.5s ease-in-out;
+}
+
+.circle:hover h2 {
+    color: var(--brasa-core-blue);
+    text-shadow: 0 0 10px var(--brasa-core-blue);
+    transition: all 0.5s ease;
+}
+
+.circle:hover p {
+    color: #fff;
+    text-shadow: 0 0 8px #fff;
+    transition: all 0.5s ease;
+}
+
+/* ---- HEADER START ---- */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 3rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 0 15px #fff, 0 0 25px var(--brasa-core-blue);
+    animation: glow-pulse 3s infinite alternate;
+}
+
+.header-controls {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.auth-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--brasa-core-blue);
+    color: var(--brasa-core-blue);
+    padding: 0.4rem 0.8rem;
+    font-family: var(--font-body);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.auth-input::placeholder {
+    color: var(--brasa-core-blue);
+    opacity: 0.7;
+}
+
+.auth-input:focus {
+    border-color: #fff;
+    box-shadow: 0 1px 5px var(--brasa-core-blue);
+}
+
+
+@keyframes glow-pulse {
+    0% { text-shadow: 0 0 5px var(--brasa-core-blue), 0 0 10px var(--brasa-core-blue); }
+    100% { text-shadow: 0 0 15px var(--brasa-core-blue), 0 0 25px var(--brasa-core-blue); }
+}
+/* ---- HEADER END ---- */
+
+#animated-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: #0d0d1c;
+}
+
+/* ---- Efeito de Cursor Furioso: Mão Robótica e Núcleo de Energia ---- */
+
+body {
+    cursor: none; /* Esconde o cursor padrão do navegador */
+    -webkit-tap-highlight-color: transparent; /* Remove o highlight de toque no mobile */
+}
+
+.custom-cursor {
+    width: 30px; /* Tamanho base da mão robótica */
+    height: 30px;
+    position: fixed;
+    pointer-events: none; /* Permite clicar nos elementos por baixo do cursor */
+    transform: translate(-50%, -50%); /* Centraliza o cursor na posição do mouse */
+    z-index: 9999;
+    /* Reset básico para o estado inicial */
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    transition: all 0.2s ease-out; /* Transições suaves para a posição */
+}
+
+/* Base da Mão Robótica */
+.custom-cursor::before,
+.custom-cursor::after {
+    content: '';
+    position: absolute;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Transição para a transformação */
+}
+
+.custom-cursor::before { /* O punho/base da mão */
+    width: 10px;
+    height: 15px;
+    background-color: #aaa;
+    border-radius: 2px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-20deg);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.custom-cursor::after { /* Os "dedos" simplificados */
+    width: 15px;
+    height: 5px;
+    background-color: #888;
+    border-radius: 2px;
+    left: 50%;
+    top: calc(50% - 10px); /* Posiciona acima do punho */
+    transform: translate(-50%, -50%) rotate(-20deg);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* Efeito de "Núcleo de Energia" no Hover */
+.custom-cursor.furious-hover {
+    width: 50px; /* Aumenta o tamanho */
+    height: 50px;
+    border-radius: 50%; /* Torna-se um círculo perfeito */
+    background: radial-gradient(circle, var(--brasa-core-blue) 0

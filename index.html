@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brasaweb - O Futuro Indie</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.min.js"></script>
+</head>
+<body>
+
+<div class="custom-cursor"></div>
+
+    <canvas id="animated-background"></canvas>
+
+    <header class="navbar">
+        <div class="logo">BRASAWB</div>
+        <div class="header-controls">
+            <input type="text" class="auth-input" placeholder="login">
+            <input type="password" class="auth-input" placeholder="senha">
+            <div class="search-box-wrapper">
+                <i class="search-icon"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        
+        <div class="brasa-core-singleton">
+            <div class="icosahedron"></div>
+            <h1>BrasaCore</h1>
+            <p>Singleton</p>
+        </div>
+
+        <div class="network-sections">
+            
+            <section id="brasabits" class="section brasabits" data-shape="tetrahedron" data-color="#ff0077">
+                <div class="node-3d-container"></div>
+                <h2>BRASABITS</h2>
+                <p>Aprendizado & Comunidade</p>
+                <div class="content-text">
+                    <span>APRENDIZADO</span>
+                    <span>COMUNIDADE</span>
+                </div>
+            </section>
+
+            <section id="brasalabs" class="section brasalabs" data-shape="dodecahedron" data-color="#00ffff">
+                <div class="node-3d-container"></div>
+                <h2>BRASALABS</h2>
+                <p>Inovação</p>
+                <div class="content-text">
+                    <span>Hypnoware</span>
+                    <span>Tunika AI</span>
+                </div>
+            </section>
+
+            <section id="brasabase" class="section brasabase" data-shape="box" data-color="#27AE60">
+                <div class="node-3d-container"></div>
+                <h2>BRASABASE</h2>
+                <p>Segurança & Bunker</p>
+                <div class="content-text">
+                    <span>Segurança</span>
+                    <span>Encriptação</span>
+                </div>
+            </section>
+
+            <section id="brasakhaos" class="section brasakhaos" data-shape="octahedron" data-color="#ffeb3b">
+                <div class="node-3d-container"></div>
+                <h2>BRASAKHAOS</h2>
+                <p>Manifesto & Ethos</p>
+                <div class="content-text">
+                    <span>Livre Criativa</span>
+                    <span>Ethos Indie</span>
+                    <span>Biometria</span>
+                </div>
+            </section>
+            
+            </div>
+
+    </main>
+
+    <footer class="footer">
+        <div class="social-links">
+            <a href="#" class="social-icon spotify"></a>
+            <a href="#" class="social-icon youtube"></a>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
