@@ -4,8 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const adTextElement = document.createElement('span');
     adTextElement.classList.add('ad-line');
     output.appendChild(adTextElement);
+    const knockSound = document.getElementById('knockSound');
 
-    // Conteúdo das "propagandas"
     const ads = [
         "HYPNOWARE: Ferramentas dinâmicas de onboarding e apresentações.",
         "CHATNOIR: Mensagens em sigilo. Criptografia total.",
@@ -14,21 +14,49 @@ document.addEventListener('DOMContentLoaded', () => {
         "BRASABITS: O Palco da comunidade e aprendizado."
     ];
     let adIndex = 0;
+    
+    // Novo estado de controle
+    let isInitialized = false;
 
     // Função para adicionar uma nova linha ao terminal
     const addLine = (text) => {
         output.textContent += `${text}\n`;
-        output.scrollTop = output.scrollHeight; // Scroll para o final
+        output.scrollTop = output.scrollHeight;
     };
-
-    // Função para lidar com a digitação do usuário
+    
     const handleCommand = (command) => {
         addLine(`BRASAWB > ${command}`);
-
-        // Limpar o input
         input.value = '';
 
-        // Processar os comandos (placeholder para a URA)
+        if (!isInitialized) {
+            if (command.toLowerCase().trim() === 'enter') {
+                isInitialized = true;
+                if (knockSound) {
+                    knockSound.play().catch(error => console.error("Erro ao tocar o áudio:", error));
+                }
+                
+                // Inicia o script do Matrix
+                setTimeout(() => {
+                    addLine('Wake up, Neo...');
+                    setTimeout(() => {
+                        addLine('The Matrix has you.');
+                        setTimeout(() => {
+                            addLine('Follow the white rabbit.');
+                            setTimeout(() => {
+                                addLine('Knock, knock, Neo.');
+                                // Já tocamos o som, então apenas a mensagem aparece
+                                // O usuário pode pressionar enter novamente para continuar...
+                            }, 2000);
+                        }, 2000);
+                    }, 2000);
+                }, 1000);
+            } else {
+                addLine('Comando não reconhecido. Pressione ENTER para iniciar.');
+            }
+            return;
+        }
+
+        // Lógica dos comandos
         switch (command.toLowerCase().trim()) {
             case 'help':
                 addLine('Comandos disponíveis:');
@@ -44,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 addLine('Nossas principais criações: Hypnoware, Chatnoir, GetaOS, Tunika AI.');
                 break;
             case 'ura':
-                // A URA será conectada aqui
                 addLine('[Aguardando conexão com a URA...]');
                 addLine('...URGÊNCIA: 🔴🔴🔴⭕⭕');
                 addLine('...COMPLEXIDADE: 🔴⭕⭕⭕⭕');
@@ -60,36 +87,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    // Ciclo de propagandas
     const cycleAds = () => {
         adTextElement.textContent = ads[adIndex];
         adIndex = (adIndex + 1) % ads.length;
     };
-    setInterval(cycleAds, 5000); // Muda a cada 5 segundos
+    setInterval(cycleAds, 5000);
     
-    // Adicionar um evento para o Enter no input
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
-            e.preventDefault(); // Evita a quebra de linha
+            e.preventDefault();
             const command = input.value;
             handleCommand(command);
         }
     });
 
-    // Mensagem de entrada (Wake up, Neo...)
-    setTimeout(() => {
-        addLine('Wake up, Neo...');
-        setTimeout(() => {
-            addLine('The Matrix has you.');
-            setTimeout(() => {
-                addLine('Follow the white rabbit.');
-                setTimeout(() => {
-                    addLine('Knock, knock, Neo.');
-                }, 2000);
-            }, 2000);
-        }, 2000);
-    }, 1000);
-    
-    // Focar no input ao carregar a página
+    // Mensagem de início
+    addLine('Pressione ENTER para iniciar a conexão.');
     input.focus();
 });
